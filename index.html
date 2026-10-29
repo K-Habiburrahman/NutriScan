@@ -10,33 +10,42 @@
 <body>
   <header class="topbar"><a class="brand" href="#"><span class="brand-icon">✳</span><span>Nutri<span class="brand-accent">Lens</span><small>FOOD LABEL ANALYZER</small></span></a><div class="topbar-actions"><button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark theme"><span aria-hidden="true">☾</span><span id="themeToggleLabel">Dark theme</span></button><span class="top-pill"><i></i> Private, in-browser analysis</span></div></header>
   <main>
-    <section class="hero"><div class="eyebrow"><span>✦</span> MAKE INFORMED FOOD CHOICES</div><h1>Know what’s in<br><em>your food.</em></h1><p class="hero-copy">Search for a packaged food by its exact product name, or upload the printed nutrition panel if it is not listed. Get a transparent nutrition estimate.</p></section>
-    <section class="panel search-panel">
-      <div class="section-heading"><span class="step">01</span><div><h2>Search by product name</h2><p>Enter the product name and brand as printed on the packet. We’ll look for matching product data.</p></div></div>
-      <form id="productSearchForm" class="product-search-form">
-        <label class="search-field"><span>Exact product name *</span><input id="productName" type="text" required minlength="2" placeholder="e.g. Maggi 2-Minute Noodles Masala"></label>
-        <label class="search-field"><span>Brand (optional)</span><input id="productBrand" type="text" placeholder="e.g. Nestlé"></label>
-        <button id="productSearchBtn" class="primary-btn" type="submit">Search product data <span>→</span></button>
-      </form>
-      <p class="privacy-note">Searches the Open Food Facts public product database. Internet connection required. Product coverage may vary by country and brand.</p>
-      <p id="searchStatus" class="search-status" role="status" hidden></p>
-      <div id="productMatches" class="product-matches" hidden></div>
-    </section>
-    <div class="method-divider"><span>OR</span></div>
-    <section class="workspace">
-      <div class="panel upload-panel">
-        <div class="section-heading"><span class="step">02</span><div><h2>Upload food label</h2><p>Use a clear, well-lit photo of the packet’s printed label.</p></div></div>
+    <section class="hero"><div class="eyebrow"><span>✦</span> FOOD LABEL, MADE SIMPLE</div><h1>What’s in your<br><em>food?</em></h1><p class="hero-copy">Choose how you’d like to look up a product. Review its nutrition details and get a clear, educational estimate.</p></section>
+    <section class="entry-options" aria-label="Choose how to find a food product">
+      <article class="panel entry-card">
+        <div class="section-heading"><span class="step">01</span><div><h2>Search by name or brand</h2><p>Find a product in the food database.</p></div></div>
+        <form id="productSearchForm" class="product-search-form">
+          <label class="search-field"><span>Product name *</span><input id="productName" type="text" required minlength="2" placeholder="e.g. tomato soup"></label>
+          <label class="search-field"><span>Brand <span class="optional-label">(optional)</span></span><input id="productBrand" type="text" placeholder="e.g. Acme Foods"></label>
+          <button id="productSearchBtn" class="primary-btn" type="submit" disabled>Search products <span>→</span></button>
+        </form>
+        <p class="entry-note">Searches the Open Food Facts database. Internet connection required.</p>
+        <p id="searchStatus" class="search-status" role="status" hidden></p>
+        <div id="productMatches" class="product-matches" hidden></div>
+      </article>
+      <article class="panel entry-card">
+        <div class="section-heading"><span class="step">02</span><div><h2>Search by food image</h2><p>Read the nutrition panel from a photo.</p></div></div>
         <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a food label image"><div id="uploadContent"><div class="upload-symbol">↑</div><h3>Drop your label image here</h3><p>or <button id="browseBtn" class="text-button" type="button">browse files</button></p><span class="file-hint">PNG, JPG or WEBP · Up to 10 MB</span></div><img id="preview" alt="Selected food label preview" hidden><button id="removeImage" class="remove-image" type="button" hidden aria-label="Remove image">×</button></div>
-        <div class="privacy-note"><span>⌑</span> Your image is processed in this browser using OCR. It is not uploaded to a project server.</div>
-        <button id="analyzeBtn" class="primary-btn" disabled><span>✦</span> Analyze nutrition label <span>→</span></button>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a food label image"><div id="uploadContent"><div class="upload-symbol">↑</div><h3>Drop a label photo here</h3><p>or <button id="browseBtn" class="text-button" type="button">browse files</button></p><span class="file-hint">PNG, JPG or WEBP · Up to 10 MB</span></div><img id="preview" alt="Selected food label preview" hidden><button id="removeImage" class="remove-image" type="button" hidden aria-label="Remove image">×</button></div>
+        <p class="entry-note">Your image is processed in this browser and isn’t uploaded.</p>
+        <button id="analyzeBtn" class="primary-btn" disabled><span>✦</span> Analyze label <span>→</span></button>
         <div id="progressWrap" class="progress-wrap" hidden><div class="progress-top"><span id="progressText">Preparing image…</span><span id="progressPct">0%</span></div><div class="progress-track"><div id="progressBar"></div></div></div>
         <p id="error" class="error" role="alert" hidden></p>
-      </div>
-      <div class="panel guide-panel"><div class="section-heading"><span class="guide-icon">◎</span><div><h2>For the best results</h2><p>A few tips for a more accurate reading.</p></div></div><div class="tip"><span class="tip-number">1</span><div><b>Capture the full panel</b><p>Include the complete nutrition table and serving size.</p></div></div><div class="tip"><span class="tip-number">2</span><div><b>Keep text sharp</b><p>Avoid glare, shadows, blur, and steep angles.</p></div></div><div class="tip"><span class="tip-number">3</span><div><b>Check the extracted values</b><p>OCR can misread small print. Review and edit values before scoring.</p></div></div><div class="guide-callout"><span>ⓘ</span><p><b>Good to know</b><br>Nutrition panels vary by country and brand. This tool gives an educational estimate, not medical advice.</p></div></div>
+      </article>
+      <article class="panel entry-card">
+        <div class="section-heading"><span class="step">03</span><div><h2>Enter barcode manually</h2><p>Look up the number printed beneath the barcode.</p></div></div>
+        <form id="barcodeSearchForm" class="barcode-search-form">
+          <label class="search-field" for="barcodeNumber"><span>Barcode number</span><input id="barcodeNumber" type="text" inputmode="numeric" autocomplete="off" pattern="[0-9]{8,14}" minlength="8" maxlength="14" placeholder="e.g. 0123456789012" required aria-describedby="barcodeHint"></label>
+          <p id="barcodeHint" class="field-hint">Enter 8–14 digits. Usually found below the barcode.</p>
+          <button id="barcodeSearchBtn" class="primary-btn" type="submit" disabled>Find product <span>→</span></button>
+        </form>
+        <p id="barcodeStatus" class="search-status" role="status" hidden></p>
+        <p class="entry-note barcode-note">Product coverage depends on the public food database.</p>
+      </article>
+      <div class="panel guide-panel landing-guide"><div class="section-heading"><span class="guide-icon">◎</span><div><h2>For the best results</h2><p>A few tips for a more accurate reading.</p></div></div><div class="tip"><span class="tip-number">1</span><div><b>Capture the full panel</b><p>Include the complete nutrition table and serving size.</p></div></div><div class="tip"><span class="tip-number">2</span><div><b>Keep text sharp</b><p>Avoid glare, shadows, blur, and steep angles.</p></div></div><div class="tip"><span class="tip-number">3</span><div><b>Check the extracted values</b><p>OCR can misread small print. Review and edit values before scoring.</p></div></div><div class="guide-callout"><span>ⓘ</span><p><b>Good to know</b><br>Nutrition panels vary by country and brand. This tool gives an educational estimate, not medical advice.</p></div></div>
     </section>
     <section id="results" class="results" hidden>
-      <div class="results-header"><div><div class="eyebrow">03 · YOUR RESULTS</div><h2>Nutrition overview</h2><p id="resultSource">Review the detected values, correct anything inaccurate, then calculate your score.</p></div><button id="resetBtn" class="secondary-btn">Start over ↗</button></div>
+      <div class="results-header"><div><div class="eyebrow">04 · YOUR RESULTS</div><h2>Nutrition overview</h2><p id="resultSource">Review the detected values, correct anything inaccurate, then calculate your score.</p></div><button id="resetBtn" class="secondary-btn">Start over ↗</button></div>
       <div class="results-grid"><div class="panel score-panel score-average" id="scorePanel"><div class="score-caption">ESTIMATED NUTRITION SCORE</div><div class="score-ring" id="scoreRing"><div><strong id="scoreValue">—</strong><span>out of 100</span></div></div><div id="ratingLabel" class="rating-label">Review label values</div><p id="scoreSummary" class="score-summary">Score will appear after you review the extracted values.</p><div class="score-footnote">A heuristic estimate based on detected nutrients. Not a validated medical or regulatory grade.</div></div>
       <div class="panel nutrient-panel"><div class="section-heading compact"><div><h2>Nutrition comparison</h2><p>Compare the product reading with the general guide shown on each nutrient. These educational guides assume values per 100 g/ml; serving-size values are not directly comparable.</p></div></div><div class="nutrient-grid" id="nutrientGrid"></div><div class="score-actions"><button id="scoreBtn" class="primary-btn">Calculate score <span>→</span></button></div></div></div>
       <div class="panel details-panel"><div class="section-heading compact"><div><h2>What we noticed</h2><p>Ideal quantities are approximate educational guides per 100 g/ml, not personalized dietary recommendations. Check that the product reading uses the same basis; OCR may detect values per serving.</p></div></div><div class="comparison-chart-panel"><div class="comparison-chart-title"><h3>Visual comparison</h3><p>Axis quantities are shared across nutrients with the same unit. Each marker indicates that nutrient’s guide quantity; bars show product amounts.</p></div><div id="comparisonChart" class="comparison-chart" aria-label="Nutrient quantities compared with ideal guide levels"></div></div><div class="comparison-table-wrap"><table class="comparison-table"><thead><tr><th scope="col">Item name</th><th scope="col">Quantity in product</th><th scope="col">Ideal quantity</th></tr></thead><tbody id="comparisonTableBody"></tbody></table></div><div id="insights" class="insights"></div></div>

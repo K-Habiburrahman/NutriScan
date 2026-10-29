@@ -28,10 +28,22 @@ themeToggle.addEventListener('click',()=>{
 
 // Product-name lookup uses the public Open Food Facts database (no project backend required).
 const OFF_API = 'https://world.openfoodfacts.org/cgi/search.pl';
+const OFF_PRODUCT_API = 'https://world.openfoodfacts.org/api/v2/product';
 const searchForm = $('productSearchForm');
 const matchesEl = $('productMatches');
 const searchStatus = $('searchStatus');
+const barcodeStatus = $('barcodeStatus');
+const productNameInput = $('productName');
+const barcodeInput = $('barcodeNumber');
+let productSearchInProgress=false,barcodeSearchInProgress=false;
 function setSearchStatus(message, isError=false) { searchStatus.textContent=message; searchStatus.classList.toggle('error-text',isError); searchStatus.hidden=!message; }
+function setBarcodeStatus(message, isError=false) { barcodeStatus.textContent=message; barcodeStatus.classList.toggle('error-text',isError); barcodeStatus.hidden=!message; }
+function updateProductSearchButton() { $('productSearchBtn').disabled=productSearchInProgress||!productNameInput.validity.valid||productNameInput.value.trim().length<2; }
+function updateBarcodeSearchButton() { $('barcodeSearchBtn').disabled=barcodeSearchInProgress||!$('barcodeSearchForm').checkValidity(); }
+productNameInput.addEventListener('input',updateProductSearchButton);
+barcodeInput.addEventListener('input',updateBarcodeSearchButton);
+updateProductSearchButton();
+updateBarcodeSearchButton();
 function safeText(value,fallback='Not provided') { return value===undefined||value===null||value===''?fallback:String(value); }
 function gradeLabel(grade) { const map={a:'A · Excellent',b:'B · Good',c:'C · Moderate',d:'D · Poor',e:'E · Poor'}; return map[String(grade||'').toLowerCase()]||'Not available'; }
 function gradeStatus(grade) { const value=String(grade||'').toLowerCase(); return value==='a'||value==='b'?'healthy':value==='d'||value==='e'?'harmful':'average'; }
@@ -44,7 +56,7 @@ function productToNutrients(p) {
 }
 function showProductMatches(products) {
  matchesEl.innerHTML=''; matchesEl.hidden=false;
- if(!products.length){matchesEl.textContent='No matching products found. Check spelling, try adding/removing the brand, or use the label upload option.';return;}
+ if(!products.length){matchesEl.textContent='No matching products found. Check spelling, try adding/removing the brand, or search by barcode or food image.';return;}
  products.forEach(product=>{
   const card=document.createElement('article');card.className='product-match';
   if(product.image_front_url){const img=document.createElement('img');img.src=product.image_front_url;img.alt='';img.loading='lazy';img.onerror=()=>img.remove();card.append(img);}
@@ -58,21 +70,41 @@ function showProductMatches(products) {
  });
 }
 async function searchProducts(name,brand) {
- matchesEl.hidden=true;matchesEl.innerHTML='';setSearchStatus('Searching product database…');$('productSearchBtn').disabled=true;
+ productSearchInProgress=true;updateProductSearchButton();
+ matchesEl.hidden=true;matchesEl.innerHTML='';setSearchStatus('Searching product database…');
  try {
   const terms=[name.trim(),brand.trim()].filter(Boolean).join(' ');
   const params=new URLSearchParams({search_terms:terms,search_simple:'1',action:'process',json:'1',page_size:'12',fields:'product_name,brands,nutriments,nutriscore_grade,nutrition_grades,code,image_front_url,quantity,categories'});
   const response=await fetch(`${OFF_API}?${params.toString()}`,{headers:{'Accept':'application/json'}});
   if(!response.ok)throw new Error(`Product database returned HTTP ${response.status}.`);
   const data=await response.json();const products=(data.products||[]).filter(p=>p.product_name&&p.nutriments);
-  showProductMatches(products);setSearchStatus(products.length?`Found ${products.length} possible match(es). Confirm the product name and brand before selecting.`:'No usable matches found. Try a shorter product name or upload the label image.');
+  showProductMatches(products);setSearchStatus(products.length?`Found ${products.length} possible match(es). Confirm the product name and brand before selecting.`:'No usable matches found. Try a shorter product name, search by barcode, or use a food image.');
  } catch(error) { setSearchStatus(`Could not search the product database. Check your internet connection and try again. (${error.message})`,true); }
- finally {$('productSearchBtn').disabled=false;}
+ finally {productSearchInProgress=false;updateProductSearchButton();}
 }
 searchForm.addEventListener('submit',event=>{event.preventDefault();const name=$('productName').value.trim();if(name.length<2){setSearchStatus('Enter the product name as printed on the packet.',true);return;}searchProducts(name,$('productBrand').value);});
-function useProduct(product) {
+$('barcodeSearchForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const barcode=$('barcodeNumber').value.trim();
+ if(!/^\d{8,14}$/.test(barcode)){setBarcodeStatus('Enter a barcode containing 8 to 14 digits.',true);return;}
+ barcodeSearchInProgress=true;updateBarcodeSearchButton();setBarcodeStatus('Searching product database…');
+ try {
+  const fields='product_name,brands,nutriments,nutriscore_grade,nutrition_grades,code,image_front_url,quantity,categories';
+  const response=await fetch(`${OFF_PRODUCT_API}/${encodeURIComponent(barcode)}.json?fields=${fields}`,{headers:{'Accept':'application/json'}});
+  if(!response.ok)throw new Error(`Product database returned HTTP ${response.status}.`);
+  const data=await response.json();
+  if(data.status!==1||!data.product)throw new Error('No matching product was found. Check the barcode and try again.');
+  setBarcodeStatus('Product found. Loading nutrition details…');
+  useProduct(data.product,barcodeStatus);
+ } catch(error) {
+  setBarcodeStatus(`Could not find this barcode. ${error.message}`,true);
+ } finally {
+  barcodeSearchInProgress=false;updateBarcodeSearchButton();
+ }
+});
+function useProduct(product,statusElement=searchStatus) {
  const values=productToNutrients(product);
- if(!Object.values(values).some(v=>v!==null)){setSearchStatus('This database entry does not contain enough nutrition information. Try another result or upload the label.',true);return;}
+ if(!Object.values(values).some(v=>v!==null)){statusElement.textContent='This database entry does not contain enough nutrition information. Try another search method or upload the label.';statusElement.classList.add('error-text');statusElement.hidden=false;return;}
  extracted=values;renderNutrients(values);
  $('rawText').value=`Product: ${product.product_name||''}\nBrand: ${product.brands||''}\nSource: Open Food Facts\nBarcode: ${product.code||''}\nNutri-Score: ${product.nutriscore_grade||product.nutrition_grades||'not provided'}\nNutrient values are mapped from database values per 100 g/ml where available.`;
  $('resultSource').textContent=`Selected: ${product.product_name||'Product'}${product.brands?' · '+product.brands:''}. Source: Open Food Facts; data may be incomplete or user-submitted.`;
