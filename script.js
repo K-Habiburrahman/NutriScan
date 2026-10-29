@@ -91,6 +91,11 @@ const nutrients = [
   {key:'totalFat',label:'Total fat',unit:'g',hint:'Consider fat type too',guide:'≤ 25 g',guideValue:25,guideDirection:'max'},
   {key:'serving',label:'Serving size',unit:'g/ml',hint:'Use label serving size if known',guide:'No fixed guide'}
 ];
+const comparisonScales = {
+ g:{max:50},
+ mg:{max:1200},
+ kcal:{max:1000}
+};
 function setFile(file){
   $('error').hidden=true;
   if(!file)return;
@@ -156,7 +161,8 @@ function nutrientStatus(n,value){
 }
 function renderComparisonChart(values){
  const chart=$('comparisonChart');chart.innerHTML='';
- nutrients.filter(n=>n.key!=='serving').forEach(n=>{
+ const unitOrder={g:0,mg:1,kcal:2};
+ nutrients.filter(n=>n.key!=='serving').sort((a,b)=>unitOrder[a.unit]-unitOrder[b.unit]).forEach(n=>{
   const row=document.createElement('div');row.className='comparison-chart-row';
   const heading=document.createElement('div');heading.className='comparison-chart-heading';
   const label=document.createElement('b');label.textContent=n.label;
@@ -176,16 +182,23 @@ function renderComparisonChart(values){
   const track=document.createElement('div');track.className='comparison-chart-track';track.setAttribute('aria-hidden','true');
   const bar=document.createElement('span');bar.className='comparison-chart-bar';
   const marker=document.createElement('span');marker.className='comparison-chart-marker';
+  const scale=comparisonScales[n.unit];
+  const guidePosition=Math.min(n.guideValue/scale.max,1)*100;
+  track.dataset.guideDirection=n.guideDirection;
+  track.style.setProperty('--guide-position',`${guidePosition}%`);
   if(typeof value==='number'&&Number.isFinite(value)){
-   const percent=Math.min(value/n.guideValue,2)/2*100;
-   bar.style.width=`${percent}%`;
+   bar.style.width=`${Math.min(value/scale.max,1)*100}%`;
   }else{
    bar.hidden=true;
   }
+  marker.style.left=`${guidePosition}%`;
   track.append(bar,marker);
-  const scale=document.createElement('div');scale.className='comparison-chart-scale';scale.setAttribute('aria-hidden','true');
-  [`0 ${n.unit}`,`${n.guideValue} ${n.unit} guide`,`${n.guideValue*2} ${n.unit}+`].forEach(text=>{const tick=document.createElement('span');tick.textContent=text;scale.append(tick);});
-  row.append(heading,track,scale);
+  const scaleLabels=document.createElement('div');scaleLabels.className='comparison-chart-scale';scaleLabels.setAttribute('aria-hidden','true');
+  const startTick=document.createElement('span');startTick.className='scale-start';startTick.textContent=`0 ${n.unit}`;
+  const guideTick=document.createElement('span');guideTick.className='scale-guide';guideTick.textContent=`${n.guideValue} ${n.unit}`;guideTick.style.left=`${guidePosition}%`;
+  const endTick=document.createElement('span');endTick.className='scale-end';endTick.textContent=`${scale.max} ${n.unit}+`;
+  scaleLabels.append(startTick,guideTick,endTick);
+  row.append(heading,track,scaleLabels);
   chart.append(row);
  });
 }

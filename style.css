@@ -163,7 +163,8 @@ body { background: var(--bg); color: var(--ink); }
 .comparison-table tbody tr.status-healthy { background: #eef0e5; }
 .comparison-table tbody tr.status-average { background: #fbf2d8; }
 .comparison-table tbody tr.status-harmful { background: #f6e8e2; }
-.comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 50%, #ead8d0 50% 100%); }
+.comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 var(--guide-position, 50%), #ead8d0 var(--guide-position, 50%) 100%); }
+.comparison-chart-track[data-guide-direction="min"] { background: linear-gradient(to right, #ead8d0 0 var(--guide-position, 50%), #f1e7c7 var(--guide-position, 50%) 100%); }
 .comparison-chart-bar { background: var(--vanilla); border: 1px solid #b69a50; }
 .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
 .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
@@ -257,6 +258,7 @@ body { background: var(--bg); color: var(--ink); }
 :root[data-theme="dark"] .dropzone:hover,
 :root[data-theme="dark"] .dropzone.dragging { background: #3b2b23; border-color: var(--healthy); }
 :root[data-theme="dark"] .remove-image { background: #382522; color: var(--ink); }
+:root[data-theme="dark"] .search-field { color: var(--ink); }
 :root[data-theme="dark"] .search-field input { color: var(--ink); }
 :root[data-theme="dark"] .nutrient-input input { color: var(--ink); }
 :root[data-theme="dark"] .nutrient-item .nutrient-guide,
@@ -278,7 +280,8 @@ body { background: var(--bg); color: var(--ink); }
 :root[data-theme="dark"] .comparison-table tbody tr.status-average { background: #463c2b; }
 :root[data-theme="dark"] .comparison-table tbody tr.status-healthy { background: #303426; }
 :root[data-theme="dark"] .comparison-table tbody tr.status-harmful { background: #482320; }
-:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 50%, #482320 50% 100%); }
+:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 var(--guide-position, 50%), #482320 var(--guide-position, 50%) 100%); }
+:root[data-theme="dark"] .comparison-chart-track[data-guide-direction="min"] { background: linear-gradient(to right, #482320 0 var(--guide-position, 50%), #463c2b var(--guide-position, 50%) 100%); }
 :root[data-theme="dark"] .comparison-chart-bar { background: var(--average); border-color: var(--average); }
 :root[data-theme="dark"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
 :root[data-theme="dark"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: var(--average); }
@@ -322,7 +325,11 @@ body { background: var(--bg); color: var(--ink); }
 .comparison-chart-bar { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: inherit; background: #c58b35; transition: width .2s ease; }
 .within-guide .comparison-chart-bar { background: #3c8a58; }
 .comparison-chart-marker { position: absolute; top: -2px; bottom: -2px; left: 50%; width: 2px; background: #24352b; }
-.comparison-chart-scale { display: flex; justify-content: space-between; margin-top: 5px; color: #89968e; font-size: 9px; }
+.comparison-chart-scale { position: relative; height: 12px; margin-top: 5px; color: #89968e; font-size: 9px; }
+.comparison-chart-scale span { position: absolute; top: 0; white-space: nowrap; }
+.comparison-chart-scale .scale-start { left: 0; }
+.comparison-chart-scale .scale-guide { transform: translateX(-50%); color: var(--healthy); font-weight: 700; }
+.comparison-chart-scale .scale-end { right: 0; }
 .unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #f1f3f0, #f1f3f0 5px, #e6eae5 5px, #e6eae5 10px); }
 .unknown-reading .comparison-chart-marker { opacity: .35; }
 @media (max-width: 520px) {
@@ -396,7 +403,8 @@ body { background: var(--bg); color: var(--ink); }
 :root[data-theme="light"] .comparison-table tbody tr.status-average { background: #fbf2d8; }
 :root[data-theme="light"] .comparison-table tbody tr.status-healthy { background: #eef0e5; }
 :root[data-theme="light"] .comparison-table tbody tr.status-harmful { background: #f6e8e2; }
-:root[data-theme="light"] .comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 50%, #ead8d0 50% 100%); }
+:root[data-theme="light"] .comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 var(--guide-position, 50%), #ead8d0 var(--guide-position, 50%) 100%); }
+:root[data-theme="light"] .comparison-chart-track[data-guide-direction="min"] { background: linear-gradient(to right, #ead8d0 0 var(--guide-position, 50%), #f1e7c7 var(--guide-position, 50%) 100%); }
 :root[data-theme="light"] .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
 :root[data-theme="light"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
 :root[data-theme="light"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
@@ -428,7 +436,8 @@ body { background: var(--bg); color: var(--ink); }
 :root[data-theme="dark"] .comparison-table tbody tr.status-healthy { background: #303426; }
 :root[data-theme="dark"] .comparison-table tbody tr.status-harmful { background: #482320; }
 :root[data-theme="dark"] .comparison-chart-panel { background: var(--paper); border-color: var(--line); }
-:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 50%, #482320 50% 100%); }
+:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 var(--guide-position, 50%), #482320 var(--guide-position, 50%) 100%); }
+:root[data-theme="dark"] .comparison-chart-track[data-guide-direction="min"] { background: linear-gradient(to right, #482320 0 var(--guide-position, 50%), #463c2b var(--guide-position, 50%) 100%); }
 :root[data-theme="dark"] .comparison-chart-bar { background: var(--average); border-color: var(--average); }
 :root[data-theme="dark"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
 :root[data-theme="dark"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: var(--average); }
