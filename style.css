@@ -110,3 +110,328 @@
   footer { flex-direction: column; }
   .footer-note { max-width: none; }
 }
+:root {
+  --vanilla: #F3E3B2;
+  --average: #F3E3B2;
+  --healthy: #46462A;
+  --harmful: #74070D;
+  --bean: #310F10;
+  --bg: var(--vanilla);
+  --paper: #fffaf0;
+  --ink: var(--bean);
+  --muted: #685c48;
+  --line: #ded0a5;
+  --green: var(--healthy);
+  --lime: var(--vanilla);
+  --soft: #ebe1bd;
+  --red: var(--harmful);
+  --amber: #94793d;
+  --shadow: 0 12px 36px rgba(49, 15, 16, .09);
+}
+body { background: var(--bg); color: var(--ink); }
+.topbar { background: var(--paper); border-bottom-color: var(--line); }
+.brand-icon, .primary-btn { background: var(--healthy); color: var(--vanilla); }
+.primary-btn:hover:not(:disabled) { background: #35351e; }
+.brand-accent, .eyebrow, .text-button, .step, .tip-number, .privacy-note span,
+.nutrient-item .nutrient-guide { color: var(--healthy); }
+.hero .eyebrow, .step, .upload-symbol, .guide-callout, .guide-icon { background: var(--vanilla); }
+.top-pill, .panel, .secondary-btn { background: var(--paper); border-color: var(--line); }
+.top-pill i, .progress-track div { background: var(--healthy); }
+.dropzone { background: #fffdf6; border-color: #bdb18a; }
+.dropzone:hover, .dropzone.dragging { border-color: var(--healthy); background: #f8f0d5; }
+.guide-callout, .guide-callout p, .guide-callout b { color: var(--bean); }
+.guide-callout span { color: var(--healthy); }
+.results-header p, .section-heading p, .privacy-note, .tip p, .score-summary,
+.score-footnote, .comparison-chart-title p, .comparison-chart-scale { color: var(--muted); }
+.score-ring { --score-progress: 0deg; background: conic-gradient(var(--score-color, #b69a50) var(--score-progress), var(--line) var(--score-progress)); }
+.score-ring:before { background: var(--paper); }
+.score-average { --score-color: var(--average); }
+.score-healthy { --score-color: var(--healthy); }
+.score-harmful { --score-color: var(--harmful); }
+.score-average .rating-label { color: var(--bean); }
+.score-healthy .rating-label { color: var(--healthy); }
+.score-harmful .rating-label { color: var(--harmful); }
+.nutrient-item { background: #fffdf7; border-color: var(--line); }
+.nutrient-input input { color: var(--bean); }
+.nutrient-input input:focus-visible { outline: 2px solid var(--healthy); outline-offset: 3px; border-radius: 3px; }
+.nutrient-item small, .file-hint { color: var(--muted); }
+.details-panel { border-color: #d6c899; border-top-color: var(--healthy); }
+.comparison-table-wrap, .comparison-chart-panel { background: #fffdf7; border-color: var(--line); }
+.comparison-table thead th { background: var(--vanilla); color: var(--bean); }
+.comparison-table tbody th, .comparison-table tbody td { color: var(--bean); }
+.comparison-table tbody tr:nth-child(even) { background: #fbf5e5; }
+.comparison-table tbody tr.status-healthy { background: #eef0e5; }
+.comparison-table tbody tr.status-average { background: #fbf2d8; }
+.comparison-table tbody tr.status-harmful { background: #f6e8e2; }
+.comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 50%, #ead8d0 50% 100%); }
+.comparison-chart-bar { background: var(--vanilla); border: 1px solid #b69a50; }
+.comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
+.comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
+.comparison-chart-row.status-harmful .comparison-chart-bar { background: var(--harmful); border-color: var(--harmful); }
+.comparison-chart-heading span { color: var(--status-ink, var(--muted)); }
+.comparison-chart-marker { background: var(--bean); }
+.unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #f5edda, #f5edda 5px, #ebe0c2 5px, #ebe0c2 10px); }
+.insight { background: #fffaf0; border-color: var(--line); border-left-color: #b69a50; }
+.insight b, .insight p { color: var(--bean); }
+.insight .insight-icon { color: var(--bean); }
+.insight-warn { background: #f6e8e2; border-color: #debab1; border-left-color: var(--harmful); }
+.insight-warn .insight-icon { background: #edd2cb !important; color: var(--harmful) !important; }
+.insight-good { background: #eef0e5; border-color: #c6c8ad; border-left-color: var(--healthy); }
+.insight-good .insight-icon { background: #dce0ca !important; color: var(--healthy) !important; }
+.insight-info { background: var(--vanilla); border-color: #dfd09e; border-left-color: #b69a50; }
+.insight-info .insight-icon { background: #ead9a6 !important; color: var(--bean) !important; }
+.product-match { background: #fffaf0; border-color: var(--line); }
+.product-meta { display: inline-block; padding: 6px 9px; border-radius: 8px; }
+.product-meta.status-healthy { background: #eef0e5; color: var(--healthy); }
+.product-meta.status-average { background: var(--vanilla); color: var(--bean); }
+.product-meta.status-harmful { background: #f6e8e2; color: var(--harmful); }
+.search-field input { border-color: var(--line); background: #fffdf7; color: var(--bean); }
+.search-field input:focus { border-color: var(--healthy); box-shadow: 0 0 0 3px rgba(70, 70, 42, .15); }
+.comparison-table-wrap, .comparison-chart-panel { color: var(--bean); }
+.secondary-btn:hover { border-color: var(--healthy); }
+.raw-panel textarea { border-color: var(--line); background: #fffdf7; color: var(--bean); }
+.error, .error-text { color: var(--harmful); }
+.score-footnote, footer { color: var(--muted); }
+.footer-note b { color: var(--healthy); }
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.theme-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 30px; background: var(--paper); color: var(--ink); font: 600 11px 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; }
+.theme-toggle:hover { border-color: var(--healthy); }
+.theme-toggle:focus-visible { outline: 2px solid var(--healthy); outline-offset: 3px; }
+.theme-toggle span:first-child { color: var(--healthy); font-size: 15px; }
+@media (max-width: 760px) {
+  .topbar-actions { gap: 7px; }
+  .theme-toggle { padding: 8px 10px; font-size: 10px; }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #231514;
+  --paper: #382522;
+  --ink: #F3E3B2;
+  --muted: #c7b9a2;
+  --line: #60413b;
+  --healthy: #b6c097;
+  --green: #b6c097;
+  --harmful: #ff8e86;
+  --red: #ff8e86;
+  --average: #e3c979;
+  --soft: #46462A;
+  --shadow: 0 12px 36px rgba(0, 0, 0, .24);
+}
+:root[data-theme="dark"] body { background: var(--bg); color: var(--ink); }
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .secondary-btn,
+:root[data-theme="dark"] .top-pill,
+:root[data-theme="dark"] .nutrient-item,
+:root[data-theme="dark"] .comparison-chart-panel,
+:root[data-theme="dark"] .product-match,
+:root[data-theme="dark"] .search-field input,
+:root[data-theme="dark"] .raw-panel textarea { background: var(--paper); color: var(--ink); border-color: var(--line); }
+:root[data-theme="dark"] .topbar { border-bottom-color: var(--line); }
+:root[data-theme="dark"] .brand,
+:root[data-theme="dark"] .brand small,
+:root[data-theme="dark"] .top-pill,
+:root[data-theme="dark"] .section-heading p,
+:root[data-theme="dark"] .results-header p,
+:root[data-theme="dark"] .privacy-note,
+:root[data-theme="dark"] .tip p,
+:root[data-theme="dark"] .score-summary,
+:root[data-theme="dark"] .score-footnote,
+:root[data-theme="dark"] footer,
+:root[data-theme="dark"] .comparison-chart-title p,
+:root[data-theme="dark"] .comparison-chart-scale,
+:root[data-theme="dark"] .nutrient-item small,
+:root[data-theme="dark"] .file-hint { color: var(--muted); }
+:root[data-theme="dark"] .brand-icon,
+:root[data-theme="dark"] .primary-btn { background: #46462A; color: var(--vanilla); }
+:root[data-theme="dark"] .primary-btn:hover:not(:disabled) { background: #5a5a36; }
+:root[data-theme="dark"] .hero .eyebrow,
+:root[data-theme="dark"] .step,
+:root[data-theme="dark"] .upload-symbol,
+:root[data-theme="dark"] .guide-callout,
+:root[data-theme="dark"] .guide-icon { background: #46462A; color: var(--vanilla); }
+:root[data-theme="dark"] .guide-callout,
+:root[data-theme="dark"] .guide-callout p,
+:root[data-theme="dark"] .guide-callout b { color: var(--vanilla); }
+:root[data-theme="dark"] .dropzone { background: #2e1d1b; border-color: #796055; }
+:root[data-theme="dark"] .dropzone:hover,
+:root[data-theme="dark"] .dropzone.dragging { background: #3b2b23; border-color: var(--healthy); }
+:root[data-theme="dark"] .remove-image { background: #382522; color: var(--ink); }
+:root[data-theme="dark"] .search-field input { color: var(--ink); }
+:root[data-theme="dark"] .nutrient-input input { color: var(--ink); }
+:root[data-theme="dark"] .nutrient-item .nutrient-guide,
+:root[data-theme="dark"] .brand-accent,
+:root[data-theme="dark"] .eyebrow,
+:root[data-theme="dark"] .text-button,
+:root[data-theme="dark"] .privacy-note span,
+:root[data-theme="dark"] .tip-number { color: var(--healthy); }
+:root[data-theme="dark"] .score-ring:before { background: var(--paper); }
+:root[data-theme="dark"] .score-average .rating-label { color: var(--average); }
+:root[data-theme="dark"] .score-healthy .rating-label { color: var(--healthy); }
+:root[data-theme="dark"] .score-harmful .rating-label { color: var(--harmful); }
+:root[data-theme="dark"] .details-panel { border-color: var(--line); border-top-color: var(--healthy); }
+:root[data-theme="dark"] .comparison-table-wrap { background: var(--paper); border-color: var(--line); }
+:root[data-theme="dark"] .comparison-table thead th { background: #46462A; color: var(--vanilla); }
+:root[data-theme="dark"] .comparison-table tbody th,
+:root[data-theme="dark"] .comparison-table tbody td { color: var(--ink); }
+:root[data-theme="dark"] .comparison-table tbody tr:nth-child(even),
+:root[data-theme="dark"] .comparison-table tbody tr.status-average { background: #463c2b; }
+:root[data-theme="dark"] .comparison-table tbody tr.status-healthy { background: #303426; }
+:root[data-theme="dark"] .comparison-table tbody tr.status-harmful { background: #482320; }
+:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 50%, #482320 50% 100%); }
+:root[data-theme="dark"] .comparison-chart-bar { background: var(--average); border-color: var(--average); }
+:root[data-theme="dark"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
+:root[data-theme="dark"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: var(--average); }
+:root[data-theme="dark"] .comparison-chart-row.status-harmful .comparison-chart-bar { background: var(--harmful); border-color: var(--harmful); }
+:root[data-theme="dark"] .comparison-chart-heading span { color: var(--muted); }
+:root[data-theme="dark"] .comparison-chart-marker { background: var(--vanilla); }
+:root[data-theme="dark"] .unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #382d29, #382d29 5px, #483933 5px, #483933 10px); }
+:root[data-theme="dark"] .insight { background: #382522; border-color: var(--line); border-left-color: var(--average); }
+:root[data-theme="dark"] .insight b,
+:root[data-theme="dark"] .insight p { color: var(--ink); }
+:root[data-theme="dark"] .insight-warn { background: #482320; border-color: #76423c; border-left-color: var(--harmful); }
+:root[data-theme="dark"] .insight-warn .insight-icon { background: #60312c !important; color: var(--harmful) !important; }
+:root[data-theme="dark"] .insight-good { background: #303426; border-color: #555b3f; border-left-color: var(--healthy); }
+:root[data-theme="dark"] .insight-good .insight-icon { background: #3d442f !important; color: var(--healthy) !important; }
+:root[data-theme="dark"] .insight-info { background: #463c2b; border-color: #6a583b; border-left-color: var(--average); }
+:root[data-theme="dark"] .insight-info .insight-icon { background: #5b4b32 !important; color: var(--vanilla) !important; }
+:root[data-theme="dark"] .product-meta.status-healthy { background: #303426; color: var(--healthy); }
+:root[data-theme="dark"] .product-meta.status-average { background: #463c2b; color: var(--vanilla); }
+:root[data-theme="dark"] .product-meta.status-harmful { background: #482320; color: var(--harmful); }
+:root[data-theme="dark"] .error,
+:root[data-theme="dark"] .error-text { color: var(--harmful); }
+.nutrient-item .nutrient-guide { color: var(--green); font-weight: 700; margin-top: 8px; }
+.nutrient-item .nutrient-hint { margin-top: 4px; }
+.comparison-table-wrap { width: 100%; overflow-x: auto; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 12px; }
+.comparison-table { width: 100%; border-collapse: collapse; text-align: left; }
+.comparison-table th, .comparison-table td { padding: 13px 15px; border-bottom: 1px solid var(--line); font-size: 12px; }
+.comparison-table thead th { background: #f3f7f1; color: var(--green); font-weight: 700; white-space: nowrap; }
+.comparison-table tbody th { color: var(--ink); font-weight: 600; }
+.comparison-table tbody td { color: #52655a; }
+.comparison-table tbody tr:last-child th, .comparison-table tbody tr:last-child td { border-bottom: 0; }
+.comparison-table tbody tr:nth-child(even) { background: #fbfcf9; }
+.comparison-chart-panel { margin-bottom: 22px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: #fcfdfa; }
+.comparison-chart-title h3 { margin: 0 0 5px; font: 700 14px Manrope, sans-serif; color: var(--ink); }
+.comparison-chart-title p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.comparison-chart { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; margin-top: 20px; }
+.comparison-chart-row { min-width: 0; }
+.comparison-chart-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.comparison-chart-heading b { font-size: 11px; color: var(--ink); }
+.comparison-chart-heading span { font-size: 10px; text-align: right; color: #64746b; }
+.comparison-chart-track { position: relative; height: 12px; overflow: hidden; border-radius: 8px; background: linear-gradient(to right, #eef2ec 0 50%, #f8efe2 50% 100%); }
+.comparison-chart-bar { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: inherit; background: #c58b35; transition: width .2s ease; }
+.within-guide .comparison-chart-bar { background: #3c8a58; }
+.comparison-chart-marker { position: absolute; top: -2px; bottom: -2px; left: 50%; width: 2px; background: #24352b; }
+.comparison-chart-scale { display: flex; justify-content: space-between; margin-top: 5px; color: #89968e; font-size: 9px; }
+.unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #f1f3f0, #f1f3f0 5px, #e6eae5 5px, #e6eae5 10px); }
+.unknown-reading .comparison-chart-marker { opacity: .35; }
+@media (max-width: 520px) {
+  .comparison-table th, .comparison-table td { padding: 11px 10px; font-size: 11px; }
+  .comparison-chart { grid-template-columns: 1fr; gap: 16px; }
+  .comparison-chart-panel { padding: 14px; }
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F3E3B2;
+  --paper: #fffaf0;
+  --ink: #310F10;
+  --muted: #685c48;
+  --line: #ded0a5;
+  --healthy: #46462A;
+  --harmful: #74070D;
+  --average: #F3E3B2;
+}
+:root[data-theme="light"] body { background: var(--bg); color: var(--ink); }
+:root[data-theme="light"] .topbar,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .top-pill,
+:root[data-theme="light"] .secondary-btn { background: var(--paper); color: var(--ink); border-color: var(--line); }
+:root[data-theme="light"] .brand { color: var(--ink); }
+:root[data-theme="light"] .brand small,
+:root[data-theme="light"] .top-pill,
+:root[data-theme="light"] .section-heading p,
+:root[data-theme="light"] .results-header p,
+:root[data-theme="light"] .hero-copy,
+:root[data-theme="light"] .privacy-note,
+:root[data-theme="light"] .tip p,
+:root[data-theme="light"] .score-summary,
+:root[data-theme="light"] .score-footnote,
+:root[data-theme="light"] footer,
+:root[data-theme="light"] .comparison-chart-title p,
+:root[data-theme="light"] .comparison-chart-scale,
+:root[data-theme="light"] .nutrient-item small,
+:root[data-theme="light"] .file-hint { color: var(--muted); }
+:root[data-theme="light"] .brand-icon,
+:root[data-theme="light"] .primary-btn { background: var(--healthy); color: var(--vanilla); }
+:root[data-theme="light"] .hero .eyebrow,
+:root[data-theme="light"] .step,
+:root[data-theme="light"] .upload-symbol,
+:root[data-theme="light"] .guide-callout,
+:root[data-theme="light"] .guide-icon { background: var(--vanilla); color: var(--healthy); }
+:root[data-theme="light"] .guide-callout,
+:root[data-theme="light"] .guide-callout p,
+:root[data-theme="light"] .guide-callout b { color: var(--bean); }
+:root[data-theme="light"] .dropzone,
+:root[data-theme="light"] .search-field input,
+:root[data-theme="light"] .nutrient-item,
+:root[data-theme="light"] .raw-panel textarea { background: #fffdf6; color: var(--ink); border-color: var(--line); }
+:root[data-theme="light"] .nutrient-input input { color: var(--ink); }
+:root[data-theme="light"] .nutrient-item .nutrient-guide,
+:root[data-theme="light"] .brand-accent,
+:root[data-theme="light"] .eyebrow,
+:root[data-theme="light"] .text-button,
+:root[data-theme="light"] .privacy-note span,
+:root[data-theme="light"] .tip-number { color: var(--healthy); }
+:root[data-theme="light"] .score-ring:before { background: var(--paper); }
+:root[data-theme="light"] .score-average .rating-label { color: var(--bean); }
+:root[data-theme="light"] .score-healthy .rating-label { color: var(--healthy); }
+:root[data-theme="light"] .score-harmful .rating-label { color: var(--harmful); }
+:root[data-theme="light"] .details-panel { border-color: var(--line); border-top-color: var(--healthy); }
+:root[data-theme="light"] .comparison-table-wrap,
+:root[data-theme="light"] .comparison-chart-panel { background: #fffdf7; color: var(--bean); border-color: var(--line); }
+:root[data-theme="light"] .comparison-table thead th { background: var(--vanilla); color: var(--bean); }
+:root[data-theme="light"] .comparison-table tbody th,
+:root[data-theme="light"] .comparison-table tbody td { color: var(--bean); }
+:root[data-theme="light"] .comparison-table tbody tr:nth-child(even),
+:root[data-theme="light"] .comparison-table tbody tr.status-average { background: #fbf2d8; }
+:root[data-theme="light"] .comparison-table tbody tr.status-healthy { background: #eef0e5; }
+:root[data-theme="light"] .comparison-table tbody tr.status-harmful { background: #f6e8e2; }
+:root[data-theme="light"] .comparison-chart-track { background: linear-gradient(to right, #f1e7c7 0 50%, #ead8d0 50% 100%); }
+:root[data-theme="light"] .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
+:root[data-theme="light"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
+:root[data-theme="light"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: #b69a50; }
+:root[data-theme="light"] .comparison-chart-row.status-harmful .comparison-chart-bar { background: var(--harmful); border-color: var(--harmful); }
+:root[data-theme="light"] .comparison-chart-heading span { color: var(--muted); }
+:root[data-theme="light"] .comparison-chart-marker { background: var(--bean); }
+:root[data-theme="light"] .unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #f5edda, #f5edda 5px, #ebe0c2 5px, #ebe0c2 10px); }
+:root[data-theme="light"] .insight { background: #fffaf0; color: var(--bean); border-color: var(--line); border-left-color: #b69a50; }
+:root[data-theme="light"] .insight b,
+:root[data-theme="light"] .insight p { color: var(--bean); }
+:root[data-theme="light"] .insight-warn { background: #f6e8e2; border-color: #debab1; border-left-color: var(--harmful); }
+:root[data-theme="light"] .insight-warn .insight-icon { background: #edd2cb !important; color: var(--harmful) !important; }
+:root[data-theme="light"] .insight-good { background: #eef0e5; border-color: #c6c8ad; border-left-color: var(--healthy); }
+:root[data-theme="light"] .insight-good .insight-icon { background: #dce0ca !important; color: var(--healthy) !important; }
+:root[data-theme="light"] .insight-info { background: var(--vanilla); border-color: #dfd09e; border-left-color: #b69a50; }
+:root[data-theme="light"] .insight-info .insight-icon { background: #ead9a6 !important; color: var(--bean) !important; }
+:root[data-theme="light"] .product-match { background: var(--paper); border-color: var(--line); color: var(--ink); }
+:root[data-theme="light"] .product-meta.status-healthy { background: #eef0e5; color: var(--healthy); }
+:root[data-theme="light"] .product-meta.status-average { background: var(--vanilla); color: var(--bean); }
+:root[data-theme="light"] .product-meta.status-harmful { background: #f6e8e2; color: var(--harmful); }
+:root[data-theme="light"] .comparison-chart-heading b,
+:root[data-theme="light"] .comparison-chart-title h3 { color: var(--ink); }
+:root[data-theme="light"] .error,
+:root[data-theme="light"] .error-text { color: var(--harmful); }
+:root[data-theme="dark"] .comparison-table thead th { background: #46462A; color: var(--vanilla); }
+:root[data-theme="dark"] .comparison-table tbody td { color: var(--ink); }
+:root[data-theme="dark"] .comparison-table tbody tr:nth-child(even),
+:root[data-theme="dark"] .comparison-table tbody tr.status-average { background: #463c2b; }
+:root[data-theme="dark"] .comparison-table tbody tr.status-healthy { background: #303426; }
+:root[data-theme="dark"] .comparison-table tbody tr.status-harmful { background: #482320; }
+:root[data-theme="dark"] .comparison-chart-panel { background: var(--paper); border-color: var(--line); }
+:root[data-theme="dark"] .comparison-chart-track { background: linear-gradient(to right, #463c2b 0 50%, #482320 50% 100%); }
+:root[data-theme="dark"] .comparison-chart-bar { background: var(--average); border-color: var(--average); }
+:root[data-theme="dark"] .comparison-chart-row.status-healthy .comparison-chart-bar { background: var(--healthy); border-color: var(--healthy); }
+:root[data-theme="dark"] .comparison-chart-row.status-average .comparison-chart-bar { background: var(--average); border-color: var(--average); }
+:root[data-theme="dark"] .comparison-chart-row.status-harmful .comparison-chart-bar { background: var(--harmful); border-color: var(--harmful); }
+:root[data-theme="dark"] .comparison-chart-marker { background: var(--vanilla); }
+:root[data-theme="dark"] .unknown-reading .comparison-chart-track { background: repeating-linear-gradient(135deg, #382d29, #382d29 5px, #483933 5px, #483933 10px); }

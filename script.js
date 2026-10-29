@@ -1,6 +1,31 @@
 // Shared DOM helper must be declared before any code uses it.
 const $ = (id) => document.getElementById(id);
 
+const themeToggle = $('themeToggle');
+function applyTheme(theme) {
+ const isDark=theme==='dark';
+ document.documentElement.dataset.theme=isDark?'dark':'light';
+ themeToggle.setAttribute('aria-pressed',String(isDark));
+ themeToggle.setAttribute('aria-label',`Switch to ${isDark?'light':'dark'} theme`);
+ $('themeToggleLabel').textContent=isDark?'Light theme':'Dark theme';
+ themeToggle.querySelector('[aria-hidden="true"]').textContent=isDark?'☀':'☾';
+}
+try {
+ applyTheme(localStorage.getItem('nutrilens-theme')==='dark'?'dark':'light');
+} catch(error) {
+ console.warn('Could not read the saved theme preference.',error);
+ applyTheme('light');
+}
+themeToggle.addEventListener('click',()=>{
+ const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
+ applyTheme(theme);
+ try {
+  localStorage.setItem('nutrilens-theme',theme);
+ } catch(error) {
+  console.warn('Could not save the theme preference.',error);
+ }
+});
+
 // Product-name lookup uses the public Open Food Facts database (no project backend required).
 const OFF_API = 'https://world.openfoodfacts.org/cgi/search.pl';
 const searchForm = $('productSearchForm');
@@ -9,6 +34,7 @@ const searchStatus = $('searchStatus');
 function setSearchStatus(message, isError=false) { searchStatus.textContent=message; searchStatus.classList.toggle('error-text',isError); searchStatus.hidden=!message; }
 function safeText(value,fallback='Not provided') { return value===undefined||value===null||value===''?fallback:String(value); }
 function gradeLabel(grade) { const map={a:'A · Excellent',b:'B · Good',c:'C · Moderate',d:'D · Poor',e:'E · Poor'}; return map[String(grade||'').toLowerCase()]||'Not available'; }
+function gradeStatus(grade) { const value=String(grade||'').toLowerCase(); return value==='a'||value==='b'?'healthy':value==='d'||value==='e'?'harmful':'average'; }
 function productToNutrients(p) {
  const n=p.nutriments||{};
  const get=(...keys)=>{for(const key of keys){const v=n[key];if(v!==undefined&&v!==null&&v!==''&&Number.isFinite(Number(v)))return Number(v);}return null;};
@@ -25,7 +51,8 @@ function showProductMatches(products) {
   const details=document.createElement('div');details.className='product-match-details';
   const title=document.createElement('h3');title.textContent=safeText(product.product_name,'Unnamed product');
   const brand=document.createElement('p');brand.textContent=safeText(product.brands,'Brand not listed');
-  const meta=document.createElement('p');meta.className='product-meta';meta.textContent=`Nutri-Score: ${gradeLabel(product.nutriscore_grade||product.nutrition_grades)} · Barcode: ${safeText(product.code,'Not listed')}`;
+  const grade=product.nutriscore_grade||product.nutrition_grades;
+  const meta=document.createElement('p');meta.className=`product-meta status-${gradeStatus(grade)}`;meta.textContent=`Nutri-Score: ${gradeLabel(grade)} · Barcode: ${safeText(product.code,'Not listed')}`;
   const choose=document.createElement('button');choose.type='button';choose.className='secondary-btn';choose.textContent='Use this product';choose.addEventListener('click',()=>useProduct(product));
   details.append(title,brand,meta,choose);card.append(details);matchesEl.append(card);
  });
@@ -55,14 +82,14 @@ function useProduct(product) {
 const fileInput = $('fileInput'), dropzone = $('dropzone'), preview = $('preview');
 let selectedFile = null, extracted = {};
 const nutrients = [
-  {key:'sugar',label:'Total sugars',unit:'g',hint:'Lower is generally preferable'},
-  {key:'saturatedFat',label:'Saturated fat',unit:'g',hint:'Lower is generally preferable'},
-  {key:'sodium',label:'Sodium',unit:'mg',hint:'Lower is generally preferable'},
-  {key:'protein',label:'Protein',unit:'g',hint:'Can contribute positively'},
-  {key:'fiber',label:'Dietary fiber',unit:'g',hint:'Can contribute positively'},
-  {key:'calories',label:'Energy',unit:'kcal',hint:'Compare similar products'},
-  {key:'totalFat',label:'Total fat',unit:'g',hint:'Consider fat type too'},
-  {key:'serving',label:'Serving size',unit:'g/ml',hint:'Use label serving size if known'}
+  {key:'sugar',label:'Total sugars',unit:'g',hint:'Lower is generally preferable',guide:'≤ 15 g',guideValue:15,guideDirection:'max'},
+  {key:'saturatedFat',label:'Saturated fat',unit:'g',hint:'Lower is generally preferable',guide:'≤ 5 g',guideValue:5,guideDirection:'max'},
+  {key:'sodium',label:'Sodium',unit:'mg',hint:'Lower is generally preferable',guide:'≤ 600 mg',guideValue:600,guideDirection:'max'},
+  {key:'protein',label:'Protein',unit:'g',hint:'Can contribute positively',guide:'≥ 10 g',guideValue:10,guideDirection:'min'},
+  {key:'fiber',label:'Dietary fiber',unit:'g',hint:'Can contribute positively',guide:'≥ 6 g',guideValue:6,guideDirection:'min'},
+  {key:'calories',label:'Energy',unit:'kcal',hint:'Compare similar products',guide:'≤ 500 kcal',guideValue:500,guideDirection:'max'},
+  {key:'totalFat',label:'Total fat',unit:'g',hint:'Consider fat type too',guide:'≤ 25 g',guideValue:25,guideDirection:'max'},
+  {key:'serving',label:'Serving size',unit:'g/ml',hint:'Use label serving size if known',guide:'No fixed guide'}
 ];
 function setFile(file){
   $('error').hidden=true;
@@ -92,14 +119,85 @@ function parseNutrition(raw){
  const value=(names,unit='g')=>{for(const name of names){const re=new RegExp('(?:'+name+')[^\\n\\d]{0,28}([0-9]+(?:\\.[0-9]+)?)\\s*(kcal|kj|mg|mcg|µg|g)?','i');const m=t.match(re);if(m){let n=Number(m[1]),u=(m[2]||unit).toLowerCase();if(u==='mg'&&unit==='g')n/=1000;if(u==='g'&&unit==='mg')n*=1000;if(u==='kj')n/=4.184;return n;}}return null;};
  return {sugar:value(['total sugars','sugars','sugar']),saturatedFat:value(['saturated fat','saturates']),sodium:value(['sodium'],'mg'),protein:value(['protein']),fiber:value(['dietary fibre','dietary fiber','fibre','fiber']),calories:value(['energy','calories'],'kcal'),totalFat:value(['total fat','fat']),serving:value(['serving size','serve size'],'g')};
 }
-function renderNutrients(values){$('nutrientGrid').innerHTML='';nutrients.forEach(n=>{const wrap=document.createElement('div');wrap.className='nutrient-item';const label=document.createElement('label');label.textContent=n.label;label.htmlFor='nutrient-'+n.key;const row=document.createElement('div');row.className='nutrient-input';const input=document.createElement('input');input.id='nutrient-'+n.key;input.type='number';input.min='0';input.step='any';input.inputMode='decimal';input.placeholder='Unknown';input.value=values[n.key]??'';input.dataset.key=n.key;input.setAttribute('aria-label',n.label);const unit=document.createElement('span');unit.textContent=n.unit;row.append(input,unit);const hint=document.createElement('small');hint.textContent=n.hint;wrap.append(label,row,hint);$('nutrientGrid').append(wrap);});}
+function renderNutrients(values){
+ $('nutrientGrid').innerHTML='';
+ nutrients.forEach(n=>{
+  const wrap=document.createElement('div');wrap.className='nutrient-item';
+  const label=document.createElement('label');label.textContent=n.label;label.htmlFor='nutrient-'+n.key;
+  const row=document.createElement('div');row.className='nutrient-input';
+  const input=document.createElement('input');input.id='nutrient-'+n.key;input.type='number';input.min='0';input.step='any';input.inputMode='decimal';input.placeholder='Unknown';input.value=values[n.key]??'';input.dataset.key=n.key;input.setAttribute('aria-label',n.label);
+  input.addEventListener('input',()=>{const current=getValues();renderComparisonTable(current);renderComparisonChart(current);});
+  const unit=document.createElement('span');unit.textContent=n.unit;row.append(input,unit);
+  const guide=document.createElement('small');guide.className='nutrient-guide';guide.textContent=`General guide: ${n.guide}${n.key==='serving'?'':' per 100 g/ml'}`;
+  const hint=document.createElement('small');hint.className='nutrient-hint';hint.textContent=n.hint;
+  wrap.append(label,row,guide,hint);$('nutrientGrid').append(wrap);
+ });
+ renderComparisonTable(values);
+ renderComparisonChart(values);
+}
+function renderComparisonTable(values){
+ const body=$('comparisonTableBody');body.innerHTML='';
+ nutrients.filter(n=>n.key!=='serving').forEach(n=>{
+  const row=document.createElement('tr');
+  const value=values[n.key];
+  if(typeof value==='number'&&Number.isFinite(value))row.classList.add(`status-${nutrientStatus(n,value)}`);
+  else row.classList.add('status-average');
+  const item=document.createElement('th');item.scope='row';item.textContent=n.label;
+  const quantity=document.createElement('td');
+  quantity.textContent=typeof value==='number'&&Number.isFinite(value)?`${value} ${n.unit}`:'Not available';
+  const guide=document.createElement('td');guide.textContent=`${n.guide} / 100 g/ml`;
+  row.append(item,quantity,guide);body.append(row);
+ });
+}
+function nutrientStatus(n,value){
+ if(n.guideDirection==='min')return value>=n.guideValue?'healthy':'average';
+ if(value>n.guideValue)return 'harmful';
+ return 'healthy';
+}
+function renderComparisonChart(values){
+ const chart=$('comparisonChart');chart.innerHTML='';
+ nutrients.filter(n=>n.key!=='serving').forEach(n=>{
+  const row=document.createElement('div');row.className='comparison-chart-row';
+  const heading=document.createElement('div');heading.className='comparison-chart-heading';
+  const label=document.createElement('b');label.textContent=n.label;
+  const value=values[n.key];
+  const reading=document.createElement('span');
+  if(typeof value==='number'&&Number.isFinite(value)){
+   const status=nutrientStatus(n,value);
+   row.classList.add(`status-${status}`);
+   const comparison=status==='healthy'?'Meets guide':n.guideDirection==='max'?'Above guide':'Below guide';
+   reading.textContent=`${value} ${n.unit} · ${comparison}`;
+  }else{
+   row.classList.add('unknown-reading');
+   row.classList.add('status-average');
+   reading.textContent='Not available';
+  }
+  heading.append(label,reading);
+  const track=document.createElement('div');track.className='comparison-chart-track';track.setAttribute('aria-hidden','true');
+  const bar=document.createElement('span');bar.className='comparison-chart-bar';
+  const marker=document.createElement('span');marker.className='comparison-chart-marker';
+  if(typeof value==='number'&&Number.isFinite(value)){
+   const percent=Math.min(value/n.guideValue,2)/2*100;
+   bar.style.width=`${percent}%`;
+  }else{
+   bar.hidden=true;
+  }
+  track.append(bar,marker);
+  const scale=document.createElement('div');scale.className='comparison-chart-scale';scale.setAttribute('aria-hidden','true');
+  [`0 ${n.unit}`,`${n.guideValue} ${n.unit} guide`,`${n.guideValue*2} ${n.unit}+`].forEach(text=>{const tick=document.createElement('span');tick.textContent=text;scale.append(tick);});
+  row.append(heading,track,scale);
+  chart.append(row);
+ });
+}
 function getValues(){const out={};nutrients.forEach(n=>{const v=$('nutrient-'+n.key)?.value;out[n.key]=v===''||v===undefined?null:Number(v);});return out;}
 $('scoreBtn').addEventListener('click',()=>renderScore(getValues()));
 function renderScore(values){
  if(!values){
+  $('scorePanel').classList.remove('score-healthy','score-harmful');
+  $('scorePanel').classList.add('score-average');
   $('scoreValue').textContent='—';$('ratingLabel').textContent='Review label values';
   $('scoreSummary').textContent='Check the extracted values and calculate your estimate.';
-  $('scoreRing').style.background='conic-gradient(#246b4c 0deg,#e8eee5 0deg)';
+  $('scoreRing').style.setProperty('--score-progress','0deg');
   renderInsights(null);return;
  }
  // Educational heuristic only. Thresholds are approximate screening cues per 100 g/ml,
@@ -116,13 +214,15 @@ function renderScore(values){
  function bonus(key,threshold,weight){const v=values[key];if(v===null||!Number.isFinite(v))return;used++;score+=Math.min(1,v/threshold)*weight;}
  penalty('sugar',15,22);penalty('saturatedFat',5,18);penalty('sodium',600,18);penalty('calories',500,7);penalty('totalFat',25,5);
  bonus('fiber',6,10);bonus('protein',10,10);
- if(!used){$('scoreValue').textContent='—';$('ratingLabel').textContent='More data needed';$('scoreSummary').textContent='Enter at least one nutrient value to get a rough estimate.';renderInsights(null);return;}
+ if(!used){$('scorePanel').classList.remove('score-healthy','score-harmful');$('scorePanel').classList.add('score-average');$('scoreValue').textContent='—';$('ratingLabel').textContent='More data needed';$('scoreSummary').textContent='Enter at least one nutrient value to get a rough estimate.';$('scoreRing').style.setProperty('--score-progress','0deg');renderInsights(null);return;}
  score=Math.max(0,Math.min(100,Math.round(score)));
  const label=score>=80?'Better choice':score>=65?'Fair':score>=45?'Occasional choice':'Limit often';
- const color=score>=80?'#3c8a58':score>=65?'#9aaf49':score>=45?'#c58b35':'#bd554b';
+ const status=score>=80?'healthy':score<45?'harmful':'average';
+ $('scorePanel').classList.remove('score-healthy','score-average','score-harmful');
+ $('scorePanel').classList.add(`score-${status}`);
  $('scoreValue').textContent=score;$('ratingLabel').textContent=label;
  $('scoreSummary').textContent=`This estimate used ${used} available nutrient field(s). ${score<45?'The rating is low because the combined nutrient values reduced the score.':score<65?'Some nutrient values lowered the score; see the reasons below.':'Compare similar products and check the full ingredient list.'}`;
- $('scoreRing').style.background=`conic-gradient(${color} ${score*3.6}deg,#e8eee5 ${score*3.6}deg)`;
+ $('scoreRing').style.setProperty('--score-progress',`${score*3.6}deg`);
  highReasons.forEach(item=>{const v=values[item.key];if(v!==null&&Number.isFinite(v)&&v>=item.threshold)impacts.push({type:'warn',title:item.title,text:item.reason(v)});});
  if(values.fiber!==null&&Number.isFinite(values.fiber)){
   if(values.fiber<3)impacts.push({type:'info',title:'Low dietary fiber',text:`Contains ${values.fiber} g of fiber per 100 g/ml. This is a low amount; fiber can be a useful positive feature when comparing similar foods.`});

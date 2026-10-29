@@ -14,6 +14,10 @@ No Node.js, Python, npm, or project backend is required. An internet connection 
 - Product name and optional brand search using Open Food Facts.
 - Result cards show available product image, brand, barcode, and Nutri-Score metadata.
 - Maps available nutrient values per 100 g/ml into editable fields.
+- Shows approximate per-100 g/ml comparison guides beside nutrient readings; these are educational screening cues, not personalized or official dietary targets.
+- Displays a live bar chart using actual nutrient quantities and units, compared with each guide.
+- Uses the Vanilla, Dark Green, Blood Red, and Bean palette to distinguish average, healthier, and concerning results.
+- Includes a persistent light/dark theme toggle.
 - Optional browser-side OCR for products not found in the database.
 - Editable values and an educational score estimate.
 - Responsive layout.
