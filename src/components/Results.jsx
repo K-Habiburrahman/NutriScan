@@ -21,7 +21,6 @@ const Results = forwardRef(function Results(
           <h2>Nutrition overview</h2>
           <p id="resultSource">{source}</p>
         </div>
-        <button id="resetBtn" className="secondary-btn" onClick={onReset}>Start over ↗</button>
       </div>
 
       <div className="results-grid">
@@ -66,6 +65,9 @@ const Results = forwardRef(function Results(
         <p className="muted">If a value was missed, you can edit this text and run extraction again.</p>
         <button id="reparseBtn" className="secondary-btn" onClick={onReparse}>Extract values again</button>
       </details>
+      <button id="resetBtn" className="primary-btn check-another-btn" onClick={onReset}>
+        <span aria-hidden="true">←</span> Check another product <span aria-hidden="true">→</span>
+      </button>
     </section>
   );
 });

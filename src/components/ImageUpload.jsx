@@ -15,9 +15,8 @@ async function loadTesseract() {
 /**
  * onExtracted(text) is called with the recognized text and should return true
  * when at least one nutrition value could be parsed from it.
- * onClear() is called when the user removes the selected image.
  */
-export default function ImageUpload({ onExtracted, onClear }) {
+export default function ImageUpload({ onExtracted }) {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState('');
@@ -59,7 +58,6 @@ export default function ImageUpload({ onExtracted, onClear }) {
     if (inputRef.current) inputRef.current.value = '';
     setProgress(null);
     setError('');
-    onClear?.();
   }
 
   const openPicker = () => inputRef.current?.click();

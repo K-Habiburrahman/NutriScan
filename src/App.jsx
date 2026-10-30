@@ -4,7 +4,6 @@ import Hero from './components/Hero.jsx';
 import SearchByName from './components/SearchByName.jsx';
 import ImageUpload from './components/ImageUpload.jsx';
 import BarcodeSearch from './components/BarcodeSearch.jsx';
-import GuidePanel from './components/GuidePanel.jsx';
 import Results from './components/Results.jsx';
 import Footer from './components/Footer.jsx';
 import useTheme from './hooks/useTheme.js';
@@ -20,12 +19,13 @@ export default function App() {
   const [theme, toggleTheme] = useTheme();
 
   const [showResults, setShowResults] = useState(false);
+  const [activeMethod, setActiveMethod] = useState(null);
   const [inputs, setInputs] = useState(emptyInputs);
   const [rawText, setRawText] = useState('');
   const [resultSource, setResultSource] = useState(DEFAULT_SOURCE);
   // null = not calculated yet; otherwise the result of calculateScore()
   const [scoreResult, setScoreResult] = useState(null);
-  // Changing this key remounts the image uploader (used by "Start over").
+  // Changing this key remounts the image uploader and clears its local state.
   const [uploadKey, setUploadKey] = useState(0);
 
   const resultsRef = useRef(null);
@@ -80,10 +80,15 @@ export default function App() {
     setScoreResult(calculateScore(inputsToValues(inputs)));
   }, [inputs]);
 
-  // Clears the uploaded image and hides results (as the original "Start over" did).
   const handleReset = useCallback(() => {
     setShowResults(false);
+    setActiveMethod(null);
+    setInputs(emptyInputs);
+    setRawText('');
+    setResultSource(DEFAULT_SOURCE);
+    setScoreResult(null);
     setUploadKey((k) => k + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
@@ -91,16 +96,52 @@ export default function App() {
       <Header theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <Hero />
-        <section className="entry-options" aria-label="Choose how to find a food product">
-          <SearchByName onUseProduct={handleUseProduct} />
-          <ImageUpload
-            key={uploadKey}
-            onExtracted={handleOcrText}
-            onClear={() => setShowResults(false)}
-          />
-          <BarcodeSearch onUseProduct={handleUseProduct} />
-          <GuidePanel />
-        </section>
+        {!showResults && (
+          <section className="entry-options" aria-label="Choose how to find a food product">
+            {activeMethod === null ? (
+              <>
+                <button className="entry-choice" type="button" onClick={() => setActiveMethod('name')}>
+                  <span className="entry-choice-step">01</span>
+                  <span className="entry-choice-icon" aria-hidden="true">⌕</span>
+                  <span className="entry-choice-copy">
+                    <strong>Search by name</strong>
+                    <span>Find a product by name or brand</span>
+                  </span>
+                  <span className="entry-choice-arrow" aria-hidden="true">→</span>
+                </button>
+                <button className="entry-choice" type="button" onClick={() => setActiveMethod('image')}>
+                  <span className="entry-choice-step">02</span>
+                  <span className="entry-choice-icon" aria-hidden="true">▧</span>
+                  <span className="entry-choice-copy">
+                    <strong>Scan a food label</strong>
+                    <span>Upload a photo of the nutrition panel</span>
+                  </span>
+                  <span className="entry-choice-arrow" aria-hidden="true">→</span>
+                </button>
+                <button className="entry-choice" type="button" onClick={() => setActiveMethod('barcode')}>
+                  <span className="entry-choice-step">03</span>
+                  <span className="entry-choice-icon" aria-hidden="true">▥</span>
+                  <span className="entry-choice-copy">
+                    <strong>Enter a barcode</strong>
+                    <span>Look up the number on the package</span>
+                  </span>
+                  <span className="entry-choice-arrow" aria-hidden="true">→</span>
+                </button>
+              </>
+            ) : (
+              <div className="entry-selected">
+                <button className="secondary-btn method-back" type="button" onClick={() => setActiveMethod(null)}>
+                  ← Choose another method
+                </button>
+                {activeMethod === 'name' && <SearchByName onUseProduct={handleUseProduct} />}
+                {activeMethod === 'image' && (
+                  <ImageUpload key={uploadKey} onExtracted={handleOcrText} />
+                )}
+                {activeMethod === 'barcode' && <BarcodeSearch onUseProduct={handleUseProduct} />}
+              </div>
+            )}
+          </section>
+        )}
 
         {showResults && (
           <Results
