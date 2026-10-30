@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Analyze the nutrition label on packaged food and get an educational nutrition score.">
-  <title>NutriLens — Food Health Analyzer</title>
+  <title>NutriScan — Food Health Analyzer</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="#"><span class="brand-icon">✳</span><span>Nutri<span class="brand-accent">Lens</span><small>FOOD LABEL ANALYZER</small></span></a><div class="topbar-actions"><button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark theme"><span aria-hidden="true">☾</span><span id="themeToggleLabel">Dark theme</span></button><span class="top-pill"><i></i> Private, in-browser analysis</span></div></header>
+  <header class="topbar"><a class="brand" href="#" aria-label="NutriScan home"><img class="brand-logo brand-logo-light" src="assets/nutriscan-logo.png" alt="" aria-hidden="true"><img class="brand-logo brand-logo-dark" src="assets/nutriscan-logo-dark.png" alt="" aria-hidden="true"></a><div class="topbar-actions"><button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark theme"><span aria-hidden="true">☾</span><span id="themeToggleLabel">Dark theme</span></button><span class="top-pill"><i></i> Private, in-browser analysis</span></div></header>
   <main>
     <section class="hero"><div class="eyebrow"><span>✦</span> FOOD LABEL, MADE SIMPLE</div><h1>What’s in your<br><em>food?</em></h1><p class="hero-copy">Choose how you’d like to look up a product. Review its nutrition details and get a clear, educational estimate.</p></section>
     <section class="entry-options" aria-label="Choose how to find a food product">
@@ -51,6 +51,6 @@
       <div class="panel details-panel"><div class="section-heading compact"><div><h2>What we noticed</h2><p>Ideal quantities are approximate educational guides per 100 g/ml, not personalized dietary recommendations. Check that the product reading uses the same basis; OCR may detect values per serving.</p></div></div><div class="comparison-chart-panel"><div class="comparison-chart-title"><h3>Visual comparison</h3><p>Axis quantities are shared across nutrients with the same unit. Each marker indicates that nutrient’s guide quantity; bars show product amounts.</p></div><div id="comparisonChart" class="comparison-chart" aria-label="Nutrient quantities compared with ideal guide levels"></div></div><div class="comparison-table-wrap"><table class="comparison-table"><thead><tr><th scope="col">Item name</th><th scope="col">Quantity in product</th><th scope="col">Ideal quantity</th></tr></thead><tbody id="comparisonTableBody"></tbody></table></div><div id="insights" class="insights"></div></div>
       <details class="panel raw-panel"><summary>View / edit recognized label text</summary><textarea id="rawText" rows="7" spellcheck="false" placeholder="OCR text will appear here…"></textarea><p class="muted">If a value was missed, you can edit this text and run extraction again.</p><button id="reparseBtn" class="secondary-btn">Extract values again</button></details>
     </section>
-    <footer><span>NutriLens <span class="muted">· Food Health Analyzer</span></span><p class="footer-note"><b>How to read this result</b> These are approximate educational guides, not an official Nutri-Score or medical assessment. Missing values and the ingredient list can change the overall picture.</p><span>Built with HTML, CSS & JavaScript</span></footer>
+    <footer><span>NutriScan <span class="muted">· Food Health Analyzer</span></span><p class="footer-note"><b>How to read this result</b> These are approximate educational guides, not an official Nutri-Score or medical assessment. Missing values and the ingredient list can change the overall picture.</p><span>Made by <strong>KHAN KHWAJA HABIBURRAHMAN KHWAJA ANIQURRAHMAN</strong></span></footer>
   </main><script src="script.js"></script>
 </body></html>

@@ -1,4 +1,4 @@
-# NutriLens — Food Health Analyzer (HTML, CSS & JavaScript)
+# NutriScan — Food Health Analyzer (HTML, CSS & JavaScript)
 
 A browser-based tool for searching packaged food by product name or analyzing a photo of its printed nutrition label.
 
@@ -34,6 +34,7 @@ Product search terms are sent to Open Food Facts. Uploaded images are processed 
 - `index.html` — page structure
 - `style.css` — layout and styling
 - `script.js` — product search, OCR, extraction, and scoring
+- `assets/nutriscan-logo.png` and `assets/nutriscan-logo-dark.png` — light- and dark-theme NutriScan logos
 
 ## Third-party service
 Open Food Facts is an independent third-party data service. Review its current API and database terms before commercial use.
